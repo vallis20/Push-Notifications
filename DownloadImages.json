@@ -1,0 +1,266 @@
+{
+  "name": "DownloadImages",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "3c7ffcee-ddec-4860-91d3-5cee287bf822",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "/Users/nsierrar/Projects/PlentyMarkets/Research/collections.csv"
+      },
+      "id": "d42a99c1-a179-4fe3-8359-ea66d4e51712",
+      "name": "Read Binary File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "eb4eafce-7e5f-4ab9-b6cf-07339e990891",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        880,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "images",
+              "value": "={{ $json[\"image.src\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "abd33382-dc38-416b-bb46-1dd68aa02298",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "url": "= {{ $json.images }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "316bf9b7-72e3-4427-b337-b8c890d0809a",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        1640,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "images",
+        "options": {}
+      },
+      "id": "a132d68f-658f-475a-9f3a-af83ff66da84",
+      "name": "Item Lists",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "data =[\n  {\n    \"data\": [\n      \"uno\", \"dos\"\n    ]\n  }\n] \n\nreturn data;"
+      },
+      "id": "c99c0982-7145-47e6-b461-5d536abcd337",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json[\"image.width\"] }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "id": "bcf7072f-7087-4d7e-98b8-584af3cc76e2",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "[\"image.src\"]",
+        "options": {}
+      },
+      "id": "b9cd006c-3a5f-4e1c-b744-b15baadcc00f",
+      "name": "Item Lists1",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8710882a-83a3-485a-b681-f00252efa990",
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "=/Users/nsierrar/Desktop/{{ Math.random()*10 }}.jpg",
+        "options": {}
+      },
+      "id": "ad23b965-78a3-4393-b406-2016f79a54ba",
+      "name": "Write Binary File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        480
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Read Binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Binary File": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists": {
+      "main": [
+        []
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item Lists1": {
+      "main": [
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Write Binary File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "fc1d0d64-89e7-432d-9ff2-7f23f1b7742b",
+  "id": "13",
+  "meta": {
+    "instanceId": "7d15f4bb90ccfae1fc5c242a6ac3d759adf5953f4ef85c7ec975c3f0529ba697"
+  },
+  "tags": []
+}
