@@ -1,0 +1,54 @@
+{
+  "name": "Tienda de ropa",
+  "short_name": "AventuraMusica",
+  "start_url": "https://aventuramusica.myshopify.com/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://m.media-amazon.com/images/I/61YV5NcQp6L._AC_UF894,1000_QL80_.jpg",
+      "sizes": "500x500",
+      "type": "image&#x2F;jpg"
+    },
+    {
+      "src": "https://m.media-amazon.com/images/I/61YV5NcQp6L._AC_UF894,1000_QL80_.jpg",
+      "sizes": "192x192",
+      "type": "image&#x2F;jpg"
+    }
+  ],
+  "serviceworker": {
+    "src": "firebase-messaging-sw.js",
+    "scope": "/cdn/shop/t/1/assets/"
+  }
+}
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  var iconUrl = '{{ settings.favicon | image_url:}}';
+  const ofertaURL = 'https://aventuramusica.myshopify.com/'; // Reemplaza con la URL de tu oferta
+
+  // Agregar un manejador de clic al elemento con ID 'activarNotificaciones'
+  document.getElementById('activarNotificaciones').addEventListener('click', function() {
+    if ('Notification' in window) {
+      // Solicitar permiso de notificación push
+      Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+          // Permiso otorgado, puedes mostrar notificaciones
+
+         alert('siuu');
+          const notification = new Notification('Título de la notificación', {
+          body: 'Cuerpo de la notificación',
+         // Opcional: ícono de la notificación
+          });
+        } else {
+          alert('Permiso denegado');
+        }
+      });
+    }
+  });
+});
+ 
